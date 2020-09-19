@@ -9,6 +9,7 @@ edition = "2018"
 [dependencies]
 embedded-hal = "0.2.4"
 longan-nano = "0.1.1"
+gd32vf103xx-hal = "0.2.3"
 panic-halt = "0.2.0"
 riscv-rt = "0.8.0"
 

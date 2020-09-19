@@ -104,6 +104,7 @@ name = "myhelloworld2"
 version = "0.1.0"
 dependencies = [
  "embedded-hal",
+ "gd32vf103xx-hal",
  "longan-nano",
  "panic-halt",
  "riscv-rt",
