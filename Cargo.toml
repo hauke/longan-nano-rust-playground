@@ -7,11 +7,13 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-embedded-hal = "0.2.4"
-longan-nano = "0.1.1"
-gd32vf103xx-hal = "0.2.3"
-panic-halt = "0.2.0"
-riscv-rt = "0.8.0"
+embedded-hal = "0.2.*"
+longan-nano = { git = "https://github.com/riscv-rust/longan-nano.git", branch = "master", features = ["lcd"] }
+gd32vf103xx-hal = "0.3.*"
+panic-halt = "0.2.*"
+riscv = "0.5.*"
+riscv-rt = "0.7.*"
+embedded-graphics = "0.6.*"
 
 # this lets you use `cargo fix`!
 [[bin]]
