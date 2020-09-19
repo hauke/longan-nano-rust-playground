@@ -1,0 +1,9 @@
+[package]
+name = "myhelloworld2"
+version = "0.1.0"
+authors = ["Hauke Mehrtens <hauke@hauke-m.de>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
