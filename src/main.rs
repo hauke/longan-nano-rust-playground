@@ -8,6 +8,7 @@ use embedded_graphics::pixelcolor::Rgb565;
 use embedded_graphics::prelude::*;
 use embedded_graphics::primitives::Rectangle;
 use embedded_graphics::{primitive_style, text_style};
+use gd32vf103xx_hal::delay::McycleDelay;
 use gd32vf103xx_hal::pac;
 use gd32vf103xx_hal::prelude::*;
 use longan_nano::{lcd, lcd_pins};
@@ -33,23 +34,33 @@ fn main() -> ! {
     let mut lcd = lcd::configure(dp.SPI0, lcd_pins, &mut afio, &mut rcu);
     let (width, height) = (lcd.size().width as i32, lcd.size().height as i32);
 
-    // Clear screen
-    Rectangle::new(Point::new(0, 0), Point::new(width - 1, height - 1))
-        .into_styled(primitive_style!(fill_color = Rgb565::BLACK))
-        .draw(&mut lcd)
-        .unwrap();
-
     let style = text_style!(
         font = Font6x8,
         text_color = Rgb565::BLACK,
         background_color = Rgb565::GREEN
     );
 
-    // Create a text at position (20, 30) and draw it using style defined above
-    Text::new(" Hello Rust! ", Point::new(40, 35))
-        .into_styled(style)
-        .draw(&mut lcd)
-        .unwrap();
+    let mut delay = McycleDelay::new(&rcu.clocks);
+    let mut horizontal = 40;
+    let mut vertical = 35;
 
-    loop {}
+    loop {
+        // Clear screen
+        Rectangle::new(Point::new(0, 0), Point::new(width - 1, height - 1))
+            .into_styled(primitive_style!(fill_color = Rgb565::BLACK))
+            .draw(&mut lcd)
+            .unwrap();
+
+        // Create a text at position (20, 30) and draw it using style defined above
+        Text::new(" Hello Rust! ", Point::new(horizontal, vertical))
+            .into_styled(style)
+            .draw(&mut lcd)
+            .unwrap();
+
+        delay.delay_ms(250);
+        horizontal = horizontal + 1;
+        horizontal = horizontal % 80;
+        vertical = vertical + 1;
+        vertical = vertical % 70;
+    }
 }
