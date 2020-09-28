@@ -1,5 +1,5 @@
 [package]
-name = "myhelloworld2"
+name = "longan-nano-rust-playground"
 version = "0.1.0"
 authors = ["Hauke Mehrtens <hauke@hauke-m.de>"]
 edition = "2018"
@@ -17,7 +17,7 @@ embedded-graphics = "0.6.*"
 
 # this lets you use `cargo fix`!
 [[bin]]
-name = "myhelloworld2"
+name = "longan-nano-rust-playground"
 test = false
 bench = false
 
