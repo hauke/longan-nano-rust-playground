@@ -45,7 +45,6 @@ fn enable_adc(adc: &pac::ADC0, delay: &mut McycleDelay) {
     /* adc_inserted_channel_config(ADC0, 1, ADC_CHANNEL_17, ADC_SAMPLETIME_239POINT5); */
     adc.isq.modify(|_, w| unsafe { w.isq2().bits(17) });
     adc.sampt0.modify(|_, w| unsafe { w.spt17().bits(7) });
-    
     /* adc_external_trigger_source_config(ADC0, ADC_INSERTED_CHANNEL, ADC0_1_EXTTRIG_INSERTED_NONE); */
     adc.ctl1.modify(|_, w| unsafe { w.etsic().bits(7) });
 
