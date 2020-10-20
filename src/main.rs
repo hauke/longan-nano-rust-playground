@@ -15,7 +15,10 @@ use riscv_rt::entry;
 
 fn enable_adc(adc: &pac::ADC0, delay: &mut McycleDelay) {
     let rcu = unsafe { &*pac::RCU::ptr() };
-
+    /*rcu_periph_clock_enable(RCU_ADC0) */
+    rcu.apb2en.modify(|_,w| w.adc0en().set_bit());
+    /*rcu_adc_clock_config(RCU_CKADC_CKAPB2_DIV8); */
+    rcu.cfg0.modify(|_,w| unsafe {w.adcpsc_1_0().bits(0b11).adcpsc_2().clear_bit()});
     /* adc_deinit(ADC0) */
     rcu.apb2rst.modify(|_, w| w.adc0rst().set_bit());
     rcu.apb2rst.modify(|_, w| w.adc0rst().clear_bit());
@@ -42,7 +45,7 @@ fn enable_adc(adc: &pac::ADC0, delay: &mut McycleDelay) {
     /* adc_inserted_channel_config(ADC0, 1, ADC_CHANNEL_17, ADC_SAMPLETIME_239POINT5); */
     adc.isq.modify(|_, w| unsafe { w.isq2().bits(17) });
     adc.sampt0.modify(|_, w| unsafe { w.spt17().bits(7) });
-
+    
     /* adc_external_trigger_source_config(ADC0, ADC_INSERTED_CHANNEL, ADC0_1_EXTTRIG_INSERTED_NONE); */
     adc.ctl1.modify(|_, w| unsafe { w.etsic().bits(7) });
 
