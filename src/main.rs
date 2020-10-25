@@ -5,8 +5,8 @@ use panic_halt as _;
 
 use embedded_graphics::pixelcolor::Rgb565;
 use embedded_graphics::prelude::*;
+use embedded_graphics::primitive_style;
 use embedded_graphics::primitives::Rectangle;
-use embedded_graphics::{primitive_style};
 use gd32vf103xx_hal::delay::McycleDelay;
 use gd32vf103xx_hal::pac;
 use gd32vf103xx_hal::prelude::*;
@@ -15,10 +15,14 @@ use riscv_rt::entry;
 
 fn enable_adc(adc: &pac::ADC0, delay: &mut McycleDelay) {
     let rcu = unsafe { &*pac::RCU::ptr() };
+
     /*rcu_periph_clock_enable(RCU_ADC0) */
-    rcu.apb2en.modify(|_,w| w.adc0en().set_bit());
+    rcu.apb2en.modify(|_, w| w.adc0en().set_bit());
+
     /*rcu_adc_clock_config(RCU_CKADC_CKAPB2_DIV8); */
-    rcu.cfg0.modify(|_,w| unsafe {w.adcpsc_1_0().bits(0b11).adcpsc_2().clear_bit()});
+    rcu.cfg0
+        .modify(|_, w| unsafe { w.adcpsc_1_0().bits(0b11).adcpsc_2().clear_bit() });
+
     /* adc_deinit(ADC0) */
     rcu.apb2rst.modify(|_, w| w.adc0rst().set_bit());
     rcu.apb2rst.modify(|_, w| w.adc0rst().clear_bit());
@@ -111,7 +115,7 @@ fn main() -> ! {
         let temp = get_temp(&dp.ADC0, &mut delay);
 
         // Position the inital into the middle of the screen
-        let position = ((temp - temp_initial) * (width as f32 / 10.0)) as i32 + width  / 2;
+        let position = ((temp - temp_initial) * (width as f32 / 10.0)) as i32 + width / 2;
         // Clear screen
         Rectangle::new(Point::new(0, 0), Point::new(width - 1, height - 1))
             .into_styled(primitive_style!(fill_color = Rgb565::BLACK))
