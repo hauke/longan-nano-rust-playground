@@ -3,6 +3,8 @@
 
 use panic_halt as _;
 
+use core::fmt::Write;
+
 use embedded_graphics::pixelcolor::Rgb565;
 use embedded_graphics::prelude::*;
 use embedded_graphics::primitive_style;
@@ -10,6 +12,8 @@ use embedded_graphics::primitives::Rectangle;
 use gd32vf103xx_hal::delay::McycleDelay;
 use gd32vf103xx_hal::pac;
 use gd32vf103xx_hal::prelude::*;
+use gd32vf103xx_hal::serial::Config;
+use gd32vf103xx_hal::serial::Serial;
 use longan_nano::{lcd, lcd_pins};
 use riscv_rt::entry;
 
@@ -107,12 +111,29 @@ fn main() -> ! {
 
     let mut delay = McycleDelay::new(&rcu.clocks);
 
+    // USART0 on Pins A9 and A10
+    let pin_tx = gpioa.pa9;
+    let pin_rx = gpioa.pa10;
+    // Create an interface struct for USART0 with 9600 Baud
+    let serial = Serial::new(
+        dp.USART0,
+        (pin_tx, pin_rx),
+        Config::default().baudrate(115_200.bps()),
+        &mut afio,
+        &mut rcu,
+    );
+
+    // Split the serial struct into a receiving and a transmitting part
+    let (mut tx, _rx) = serial.split();
+
     enable_adc(&dp.ADC0, &mut delay);
 
     let temp_initial = get_temp(&dp.ADC0, &mut delay);
 
     loop {
         let temp = get_temp(&dp.ADC0, &mut delay);
+
+        writeln!(tx, "Hello Rust: Temperature: {}\n\r", temp).unwrap();
 
         // Position the inital into the middle of the screen
         let position = ((temp - temp_initial) * (width as f32 / 10.0)) as i32 + width / 2;
