@@ -111,7 +111,7 @@ fn main() -> ! {
         let temp = get_temp(&dp.ADC0, &mut delay);
 
         // Position the inital into the middle of the screen
-        let position = ((temp - temp_initial) * (width as f32 / 20.0)) as i32 + width  / 2;
+        let position = ((temp - temp_initial) * (width as f32 / 10.0)) as i32 + width  / 2;
         // Clear screen
         Rectangle::new(Point::new(0, 0), Point::new(width - 1, height - 1))
             .into_styled(primitive_style!(fill_color = Rgb565::BLACK))
